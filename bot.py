@@ -2,11 +2,11 @@ import urllib.request as req
 import json
 import urllib.error
 
-'''class used for creating and registering new bots on groupme as well as generally useful functions'''
 #jeremy's token: 0lpCQwlI3phYqgpj3uosPSdAmzSmFQjeKMXWvejT
 
 
 class Bot:
+    """class used for creating and registering new bots on groupme as well as generally useful functions"""
     def __init__(self, name, access_token, callback_url="", avatar_url=""):
         self.name = name
         self.access_token = access_token
