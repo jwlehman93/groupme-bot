@@ -1,13 +1,15 @@
-import bot
+import bot.Bot as Bot
 import sys
 
 
-class SendOffBot(bot):
+class SendOffBot(Bot):
+    """For deleting graduating seniors and sending them to appropriate legacy groupme"""
 
     def __init__(self, name, access_token, callback_url='', avatar_url=''):
-        bot.__init__(self, name, access_token, callback_url, avatar_url)
-        self.input_file = open(sys.argv[1])
+        Bot.__init__(self, name, access_token, callback_url, avatar_url)
         self.new_group_id = self.create_group('Rugby Seniors 15/16')
+        with open(sys.argv[1]) as f:
+            self.senior_dict = self.get_seniors(f)
 
     def get_seniors(self, input_file):
         line = input_file.readline()
@@ -24,9 +26,10 @@ class SendOffBot(bot):
         return name_id
 
     def send_off(self):
-        for i in self.senior_dict():
+        for i in self.senior_dict:
             self.add_user(i['name'], i['id'], self.new_group_id)
             self.remove_user(i['rugby_id'], self.group_id)
+
 
 
 
