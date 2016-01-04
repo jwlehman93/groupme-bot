@@ -123,7 +123,9 @@ class Bot:
         try:
             request = req.Request('https://api.groupme.com/v3/groups?token=' + self.access_token, method='POST')
             request.add_header('Content-Type', 'application/json')
-            req.urlopen(request, json.dumps({'name': name}).encode('utf-8'))
+            response = req.urlopen(request, json.dumps({'name': name}).encode('utf-8'))
+            res_obj = json.loads(response.read().decode('utf-8'))
+            return res_obj['response']['id']
         except urllib.error.HTTPError as e:
             print(e.reason)
 
