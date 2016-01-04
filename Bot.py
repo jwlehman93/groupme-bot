@@ -132,7 +132,7 @@ class Bot:
     def delete_group(self, group_id):
         try:
             request = req.Request('https://api.groupme.com/v3/groups/' + group_id + '/destroy?token=' +
-                                  self.access_token)
+                                  self.access_token, method='POST')
             req.urlopen(request)
         except urllib.error.HTTPError as e:
             print(e.reason)
