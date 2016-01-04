@@ -13,7 +13,7 @@ class Bot:
         self.callback_url = callback_url
         self.avatar_url = avatar_url
         self.bot_id = ''
-        self.group_id = self.set_group_id()
+        self.group_id = self.get_group_id()
         self.register()
 
     def register(self):
@@ -44,13 +44,13 @@ class Bot:
         try:
             request = req.Request('https://api.groupme.com/v3/bots/post?')
             request.add_header('Content-Type', 'application/json')
-            response = req.urlopen(request, json.dumps(obj).encode('utf-8'))
+            req.urlopen(request, json.dumps(obj).encode('utf-8'))
         except urllib.error.HTTPError as e:
             print(e.reason)
 
-    def set_group_id(self):
+    def get_group_id(self):
         dev = input('Dev Mode?(y/n) ')
-        if(dev =='y'):
+        if dev == 'y':
             return '17065393'
         else:
             try:
@@ -71,7 +71,7 @@ class Bot:
         try:
             request = req.Request('https://api.groupme.com/v3/groups/' + group_id + '/members/' + group_user_id +
                                   '/remove?token=' + self.access_token, method='POST')
-            response = req.urlopen(request)
+            req.urlopen(request)
         except urllib.error.HTTPError as e:
             print("User ID: " + group_user_id)
             print("group_id: " + group_id)
@@ -90,7 +90,7 @@ class Bot:
                     }
                 ]
             }
-            response = req.urlopen(request, json.dumps(obj).encode('utf-8'))
+            req.urlopen(request, json.dumps(obj).encode('utf-8'))
         except urllib.error.HTTPError as e:
             print(e.reason)
 
@@ -119,6 +119,22 @@ class Bot:
     def say_goodbye(self):
         self.send_message(self.name + " says goodbye")
 
+    def create_group(self, name):
+        try:
+            request = req.Request('https://api.groupme.com/v3/groups?token=' + self.access_token, method='POST')
+            request.add_header('Content-Type', 'application/json')
+            req.urlopen(request, json.dumps({'name': name}).encode('utf-8'))
+        except urllib.error.HTTPError as e:
+            print(e.reason)
+
+    def delete_group(self, group_id):
+        try:
+            request = req.Request('https://api.groupme.com/v3/groups/' + group_id + '/destroy?token=' +
+                                  self.access_token)
+            req.urlopen(request)
+        except urllib.error.HTTPError as e:
+            print(e.reason)
+
     def __del__(self):
         obj = {
             'bot_id': self.bot_id
@@ -127,7 +143,7 @@ class Bot:
         try:
             request = req.Request('https://api.groupme.com/v3/bots/destroy?token='+self.access_token, method='POST')
             request.add_header('Content-Type', 'application/json')
-            response = req.urlopen(request, json.dumps(obj).encode('utf-8'))
+            req.urlopen(request, json.dumps(obj).encode('utf-8'))
         except urllib.error.HTTPError as e:
             print(e.reason)
 
@@ -137,11 +153,6 @@ bot.send_message("You do not stand a chance against my superior technology")
 users = bot.get_users(bot.group_id)
 for i in users:
     print(i['name'] + ': ' + i['group_id'])
-bot.remove_user(users[3]['group_id'], bot.group_id)
-bot.add_user('Bryce', users[3]['user_id'],bot.group_id)
+#bot.remove_user(users[3]['group_id'], bot.group_id)
+#bot.add_user('Bryce', users[3]['user_id'],bot.group_id)
 del bot
-
-
-
-
-
